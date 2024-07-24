@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Cities>
+	<City>
+		<Name>Zurich</Name>
+		<Population>402762</Population>
+		<NCoordinates>47.38</NCoordinates>
+		<ECoordinates>8.54</ECoordinates>
+	</City>
+</Cities>
