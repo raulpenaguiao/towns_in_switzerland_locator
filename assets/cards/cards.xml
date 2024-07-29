@@ -3,7 +3,22 @@
 	<City>
 		<Name>Zurich</Name>
 		<Population>402762</Population>
+		<Canton>Zurich</Canton>
 		<NCoordinates>47.38</NCoordinates>
 		<ECoordinates>8.54</ECoordinates>
+	</City>
+	<City>
+		<Name>Geneva</Name>
+		<Canton>Geneva</Canton>
+		<Population>198979</Population>
+		<NCoordinates>46.20</NCoordinates>
+		<ECoordinates>6.14</ECoordinates>
+	</City>
+	<City>
+		<Name>Basel</Name>
+		<Canton>Basel-Stadt</Canton>
+		<Population>171017</Population>
+		<NCoordinates>47.56</NCoordinates>
+		<ECoordinates>7.59</ECoordinates>
 	</City>
 </Cities>

@@ -118,6 +118,11 @@ header {
 }
 
 
+.centerimage {
+  width: 500px;
+  height: 600px;
+}
+
 .clickable:hover {
   background-color: silver;
   cursor: pointer;
