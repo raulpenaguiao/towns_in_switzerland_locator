@@ -93,10 +93,6 @@ textarea {
   height: 9rem;
 }
 
-header {
-
-}
-
 .input-box {
   float: right;
   width: 80%;
@@ -108,7 +104,7 @@ header {
 
 .center-col {
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   margin: auto;
   padding: 20px;
   border-right: 2px solid rgb(40, 30, 20);
@@ -116,7 +112,6 @@ header {
   font-size: 2rem;
   height: 9000px;
 }
-
 
 .centerimage {
   width: 500px;
@@ -132,90 +127,11 @@ header {
   background-color: rgba(0, 0, 0, 0);
 }
 
-.password-see {
-  margin: 3px;
-  margin-top: -3px;
-  display: inline-block;
-  width: fit-content;
-  border: solid 2px black;
-  cursor: pointer;
-  background-color: antiquewhite;
-  height: 3rem;
-}
-
-.password-see:hover {
-  background-color: bisque;
-}
-
-
-/*
-Third quadrand
-*/
-
-.out {
-  float: right;
-  background-color: blanchedalmond;
-}
-
-.password {
-  display: block;
-  width: 100%;
-  background-color: rgb(150, 160, 50);
-}
-
-
-/*
-first visit
-*/
-
-.firstVisit {
-  position: absolute;
-  top:0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgb(180, 160, 50, 0.965);
-}
-
-.inp {
-  background-color: rgb(180, 160, 50, 0.5);
-  width: 70%;
-  margin: 300px auto;
-  min-height: 30rem;
-  border: 2px solid black;
-  padding: 30px;
-}
-
-.inputData {
-  margin-bottom: 5px;
-}
-
-
 .main {
   font-size: 3.4rem;
   height: 6rem;
   padding: 0 20px;
 }
-
-.btnWide, .inputData  {
-  border-radius: 10px;
-  border: 0;
-  background-color: rgb(240, 230, 230);
-  cursor: pointer;
-}
-
-.inputData:hover,.btnWide:hover {
-  background-color: rgb(150, 170, 150);
-}
-
-.btnWide:active {
-  border: 5px ridge rgb(120, 140, 140);
-}
-
-.wide{
-  width: 100%;
-}
-
 
 /*
 Error box
