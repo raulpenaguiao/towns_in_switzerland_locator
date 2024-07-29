@@ -1,17 +1,12 @@
 const URLcards = "https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/cards/cards.xml";
 
 
-
-
-
-
-
 // Function to load XML file
-function loadXMLDoc(filename, callback) {
+function loadXMLDoc(filename, callbackXMLFunction) {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            callback(this.responseXML);
+            callbackXMLFunction(this.responseXML);
         }
     };
     xhttp.open("GET", filename, true);
@@ -21,7 +16,9 @@ function loadXMLDoc(filename, callback) {
 // Function to extract city data from XML
 function extractCityData(xml) {
     const cityList = [];
+    console.log(xml);
     const citiesDataset = xml.querySelector('dataset[name="Cities"]');
+    console.log(citiesDataset);
     
     if (citiesDataset) {
         const cityTable = citiesDataset.querySelector('table[name="City"]');
@@ -53,7 +50,7 @@ function extractCityData(xml) {
 }
 
 
-loadXMLDoc('assets/cards/cards.xml', function(xml) {
+loadXMLDoc(URLcards, function(xml) {
     const cityData = extractCityData(xml);
     console.log(cityData);
 });
