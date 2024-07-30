@@ -46,9 +46,8 @@ function getXmlData(path) {
 }
 
 
-var cityData = extractCityData(getXmlData(URLcards));
-
-cityData [{city:"Zurich", population:402762, canton:"Zurich", nCoordinates:47.38, eCoordinates:8.54}]
+//var cityData = extractCityData(getXmlData(URLcards));
+var cityData = [{name:"Zurich", population:402762, canton:"Zurich", nCoordinates:47.38, eCoordinates:8.54}]
 
 cityData.forEach(element => {
     HTMLPreviousScores.innerHTML += '<div class="banner">' + cityInfoStringify(element) + '</div>';
@@ -57,15 +56,27 @@ cityData.forEach(element => {
 
 
 //Display target picture when user clicks on map
+
 const HTMLmapPicture = document.getElementById("mapPicture");
 const HTMLtargetPicture = document.getElementById("targetPicture");
 const HTMLdisplayCoordinatesN = document.getElementById("displayCoordinateN");
 const HTMLdisplayCoordinatesE = document.getElementById("displayCoordinateE");
-const halfPicture = 5;
+const HTMLdisplayCoordinates = document.getElementById("coordinateDisplay");
+
+const halfPicture = 15;
 
 function displayTargetAndCoordinates(event) {
-    console.log(event.x, event.y, event)
+    const showOnClickClass = document.getElementsByClassName("showOnClick");
+    var arrayShowOnClickClass = [];
+    for(let i = 0; i < showOnClickClass.length; i++) arrayShowOnClickClass.push(showOnClickClass[i]);
+    arrayShowOnClickClass.forEach(element => {
+        element.classList.toggle("showOnClick");
+    })
     HTMLtargetPicture.style.left = event.x - halfPicture + "px";
     HTMLtargetPicture.style.top = event.y - halfPicture + "px";
+    HTMLdisplayCoordinatesN.innerHTML = event.x;
+    HTMLdisplayCoordinatesE.innerHTML = event.y;
 }
+
 HTMLmapPicture.addEventListener("click", displayTargetAndCoordinates)
+HTMLtargetPicture.addEventListener("click", displayTargetAndCoordinates)

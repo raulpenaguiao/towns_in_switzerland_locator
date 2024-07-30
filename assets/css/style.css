@@ -102,12 +102,6 @@ textarea {
   border: 2px solid red;
 }
 
-.targetPicture {
-  visibility: hidden;
-  position: absolute;
-  width: 10px;
-}
-
 .center-col {
   width: 100%;
   max-width: 900px;
@@ -116,7 +110,6 @@ textarea {
   border-right: 2px solid rgb(40, 30, 20);
   line-height: 3rem;
   font-size: 2rem;
-  height: 9000px;
 }
 
 .btn {
@@ -141,9 +134,12 @@ textarea {
   width: 100%;
 }
 
+.bannerBorder {
+  border: 1px solid black;
+}
+
 .banner {
   border-radius: 10px;
-  border: 1px solid black;
   padding: 8px 12px 8px 12px;
 }
 
@@ -151,8 +147,13 @@ textarea {
   width: 100%;
 }
 
+#targetPicture{
+  z-index: 10;
+  width: 30px;
+  position: fixed;
+}
 
-#coordinateDisplay{
+.showOnClick{
   visibility: hidden;
 }
 

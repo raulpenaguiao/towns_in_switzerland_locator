@@ -19,21 +19,21 @@
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body>
+		<img id="targetPicture" class="showOnClick" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/target.png"> 
 		<header>
 			<h1>Swiss Town Locator</h1>
 		</header>
 		<div class="cf strip" >
 			<div class="center-col">
-				<div class="banner" id="townDisplay"></div>
-				<div class="banner" id="coordinateDisplay">N:<span class="inputNumber" id="displayCoordinateN"></span>, E <span class="inputNumber" id="displayCoordinateE"></span></div>
+				<div class="banner bannerBorder" id="townDisplay"></div>
+				<div class="banner showOnClick" id="coordinateDisplay">N:<span class="inputNumber" id="displayCoordinateN"></span>&#176, E <span class="inputNumber" id="displayCoordinateE"></span>&#176</div>
 				<img class="centerimage" id="mapPicture" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/swiss_cantons.svg" alt="Map of Switzerland with Cantons"> 
-				<div class="btn">Confirm choice</div>
+				<div class="btn showOnClick">Confirm choice</div>
 				<div class="btn">Next town</div>
 				<div class="btn">Distance: <span id="distanceSpan"></span></div>
 				<div class="pallet" id="previousScores"></div>
 		</div>
 		<script id="xmlCities" type="text/xml" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/cards/cards.xml"></script>
 		<script type="text/javascript" src="assets/js/main.js"></script>
-		<img class="targetPicture" id="target" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/target.png"> 
 	</body>
 </html>
