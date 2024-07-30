@@ -102,6 +102,12 @@ textarea {
   border: 2px solid red;
 }
 
+.targetPicture {
+  visibility: hidden;
+  position: absolute;
+  width: 10px;
+}
+
 .center-col {
   width: 100%;
   max-width: 900px;
@@ -113,9 +119,41 @@ textarea {
   height: 9000px;
 }
 
+.btn {
+  border-radius: 10px;
+  background-color: rgb(156, 223, 201);
+  border: 2px solid blue;
+  display: inline-block;
+  padding: 8px 12px 8px 12px;
+}
+
+.btn:hover{
+  cursor: pointer;
+}
+
+.btn:active{
+  background-color: aqua;
+}
+
+.pallet {
+  border: 1px solid black;
+  padding: 8px 12px 8px 12px;
+  width: 100%;
+}
+
+.banner {
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 8px 12px 8px 12px;
+}
+
 .centerimage {
-  width: 500px;
-  height: 600px;
+  width: 100%;
+}
+
+
+#coordinateDisplay{
+  visibility: hidden;
 }
 
 .clickable:hover {
