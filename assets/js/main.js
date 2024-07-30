@@ -80,3 +80,10 @@ function displayTargetAndCoordinates(event) {
 
 HTMLmapPicture.addEventListener("click", displayTargetAndCoordinates)
 HTMLtargetPicture.addEventListener("click", displayTargetAndCoordinates)
+
+window.addEventListener('scroll', function(event) {
+    HTMLtargetPicture.classList.add("showOnClick");
+}, true);
+window.addEventListener('resize', function(event) {
+    HTMLtargetPicture.classList.add("showOnClick");
+}, true);
