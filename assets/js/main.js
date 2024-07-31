@@ -18,7 +18,7 @@ var globalVariables = {};
 // #region City display
 //display of a city in lower banner
 function cityInfoStringify(city) {
-    return city.name + " - Population: " + city.population + " - Canton:" + city.canton + " - N: " + city.NCoordinates + "° E: " + city.ECoordinates + "°";
+    return city.name + " - Population: " + city.population + " - Canton: " + city.canton + " - N: " + city.NCoordinates + "° E: " + city.ECoordinates + "°";
 }
 
 //display of a city in the upper banner
@@ -37,7 +37,6 @@ function ListifyHTMLCollection(HTMLCollectionInstance){
 
 
 function displayTargetAndCoordinates(event) {
-    //const showOnClickClass = document.getElementsByClassName("showOnClick");
     HTMLtargetPicture.classList.remove("hiddenElement");
     HTMLconfirmChoiceButton.classList.remove("hiddenElement");
     HTMLdisplayCoordinates.classList.remove("hiddenElement");
@@ -63,33 +62,37 @@ window.addEventListener('resize', function(event) {
 // #region coordinates latitude longitude conversion
 function FromCoordsToLatLong(x, y) {
     var boundRect = HTMLmapPicture.getBoundingClientRect();
-    
+    //console.log("Coords are = ", x, y);
     var x0 = parseFloat(boundRect.left);
     var x1 = parseFloat(boundRect.right);
     var y0 = parseFloat(boundRect.bottom);
     var y1 = parseFloat(boundRect.top);
+    //console.log("Coords map picture rectangle edges x0 = ", x0, " x1 = ", x1, " y0 = ", y0, " y1 = ", y1);
     const X0 = 5.837997;
     const X1 = 10.698235;
     const Y0 = 45.774633;
     const Y1 = 47.894986;
+    
 
-    return ans = {ECoordinates: (x - x0)*(X1 - X0)/(x1 - x0) + X0 , NCoordinates:(y - y0)*(Y1 - Y0)/(y1 - y0) + Y0};
+    var ans = {ECoordinates: (x - x0)*(X1 - X0)/(x1 - x0) + X0 , NCoordinates:(y - y0)*(Y1 - Y0)/(y1 - y0) + Y0};
+    //console.log("Lat Long is = ", ans);
+    return ans;
 }
 function FromLatLongToCoords(eCoord, nCoord) {
     var boundRect = HTMLmapPicture.getBoundingClientRect();
-    console.log("Lat Long = ", eCoord, nCoord);
+    //console.log("Lat Long = ", eCoord, nCoord);
     var x0 = parseFloat(boundRect.left);
     var x1 = parseFloat(boundRect.right);
     var y0 = parseFloat(boundRect.bottom);
     var y1 = parseFloat(boundRect.top);
-    console.log("Coords map picture rectangle edges = ", x0, x1, y0, y1);
+    //console.log("Coords map picture rectangle edges = ", x0, x1, y0, y1);
     const X0 = 5.837997;
     const X1 = 10.698235;
     const Y0 = 45.774633;
     const Y1 = 47.894986;
 
     var ans = {x: (eCoord - X0)*(x1 - x0)/(X1 - X0) + x0 , y:(nCoord - Y0)*(y1 - y0)/(Y1 - Y0) + y0};
-    console.log("Coords are = ", ans);
+    //console.log("Coords are = ", ans);
     return ans;
 }
 // #endregion
@@ -98,7 +101,12 @@ function toRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
 
-function haversineDistance(lat1, lon1, lat2, lon2) {
+function haversineDistance(point1, point2) {
+    const lat1 = point1.NCoordinates;
+    const lon1 = point1.ECoordinates;
+    const lat2 = point2.NCoordinates;
+    const lon2 = point2.ECoordinates;
+
     const R = 6371; // Radius of the Earth in kilometers
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);
@@ -122,16 +130,16 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 function ConfirmChoiceButton(){
     //Reveal the town chosen
     var coordsCity = FromLatLongToCoords(globalVariables.currentCity.ECoordinates, globalVariables.currentCity.NCoordinates);
-    console.log(coordsCity);
+    //console.log(coordsCity);
     HTMLredDotPicture.style.left = coordsCity.x - halfRedDotPicture + "px";
     HTMLredDotPicture.style.top = coordsCity.y - halfRedDotPicture + "px";
 
     //Compute and display the distance
     var targetBoundingRect = HTMLtargetPicture.getBoundingClientRect();
-    var latLonTarget = FromCoordsToLatLong((targetBoundingRect.top + targetBoundingRect.bottom)/2, (targetBoundingRect.left + targetBoundingRect.right)/2);
-    var distance = haversineDistance(globalVariables.currentCity.NCoordinates, globalVariables.currentCity.ECoordinates, latLonTarget.NCoordinates, latLonTarget.ECoordinates);
+    var targetCoordinates = FromCoordsToLatLong((targetBoundingRect.left + targetBoundingRect.right)/2, (targetBoundingRect.top + targetBoundingRect.bottom)/2);
+    var distance = haversineDistance(globalVariables.currentCity, targetCoordinates);
     
-    console.log(targetBoundingRect, latLonTarget, distance)
+    console.log(targetBoundingRect, targetCoordinates, distance)
     //Hide confirm choice button
     HTMLconfirmChoiceButton.classList.add("hiddenElement");
     HTMLredDotPicture.classList.remove("hiddenElement");
@@ -144,7 +152,6 @@ function NewTownBanner(city, distance){
     return '<div class"banner">' + cityInfoStringify(city) + " at distance " + distance.toFixed(2) + " km " + '</div>'
 }
 
-
 function NextTownButton(){
     HTMLtargetPicture.classList.add("hiddenElement");//Clean target from view
     HTMLconfirmChoiceButton.classList.add("hiddenElement");//Clean confirm button from view
@@ -152,7 +159,7 @@ function NextTownButton(){
     HTMLredDotPicture.classList.add("hiddenElement");//Clean red dot from view
 
     //Generate and reveal name of new town
-    GenerateAndRevealTown();
+    GenerateAndRevealTownName();
 }
 HTMLconfirmChoiceButton.addEventListener("click", ConfirmChoiceButton)
 HTMLnextTownButton.addEventListener("click", NextTownButton)
@@ -197,7 +204,12 @@ function getXmlData(path) {
 }
 
 function GenerateCityData(){
-    globalVariables.cityData = [{name:"Zurich", population:402762, canton:"Zurich", NCoordinates:47.38, ECoordinates:8.54}]
+    globalVariables.cityData = [
+        {name:"Zurich", population:402762, canton:"ZH", NCoordinates:47.38, ECoordinates:8.54},
+        {name:"Geneva", population:198979, canton:"GE", NCoordinates:46.20, ECoordinates:6.14},
+        {name:"Basel", population:171017, canton:"BS", NCoordinates:47.56, ECoordinates:7.59},
+        {name:"Bern", population:133115, canton:"BE", NCoordinates:46.95, ECoordinates:7.45},
+        {name:"Lugano", population:63932, canton:"TI", NCoordinates:46.00, ECoordinates:8.95},]
     //globalVariables.cityData = extractCityData(getXmlData(URLcards))
     
     //sort generated cities
@@ -208,16 +220,16 @@ function GenerateCityData(){
 }
 
 //#endregion
-// #region Generate and reveal town
+// #region Generate and reveal town name
 function GenerateRandomNumber(max){
     return Math.floor(Math.random() * max);
 }
 
-function GenerateAndRevealTown(){
+function GenerateAndRevealTownName(){
     var numberGenerated = GenerateRandomNumber(globalVariables.Limit);
     var city = globalVariables.cityData[numberGenerated];
     globalVariables.currentCity = city;
-    console.log("In GenerateAndRevealTown, city = ", city);
+    //console.log("In GenerateAndRevealTown, city = ", city);
     HTMLtownDisplay.innerHTML = cityPromptStringify(city);
 }
 // #endregion
@@ -225,7 +237,7 @@ function GenerateAndRevealTown(){
 function LoadEvents(){
     GenerateCityData();
     globalVariables.Limit = Math.min(20, globalVariables.cityData.length);
-    GenerateAndRevealTown();
+    GenerateAndRevealTownName();
 }
 
 window.addEventListener("load", LoadEvents);
