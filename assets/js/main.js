@@ -53,9 +53,11 @@ HTMLtargetPicture.addEventListener("click", displayTargetAndCoordinates)
 
 window.addEventListener('scroll', function(event) {
     HTMLtargetPicture.classList.add("hiddenElement");
+    HTMLredDotPicture.classList.add("hiddenElement");
 }, true);
 window.addEventListener('resize', function(event) {
     HTMLtargetPicture.classList.add("hiddenElement");
+    HTMLredDotPicture.classList.add("hiddenElement");
 }, true);
 
 // #endregion
