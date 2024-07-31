@@ -118,6 +118,7 @@ textarea {
   border: 2px solid blue;
   display: inline-block;
   padding: 8px 12px 8px 12px;
+  margin: 4px 5px 4px 5px;
 }
 
 .btn:hover{
@@ -153,7 +154,13 @@ textarea {
   position: fixed;
 }
 
-.showOnClick{
+#redDotPicture{
+  z-index: 5;
+  width: 10px;
+  position: fixed;
+}
+
+.hiddenElement{
   visibility: hidden;
 }
 

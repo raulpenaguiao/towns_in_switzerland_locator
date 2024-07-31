@@ -19,18 +19,21 @@
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body>
-		<img id="targetPicture" class="showOnClick" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/target.png"> 
+		<img id="targetPicture" class="hiddenElement" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/target.png"> 
+		<img id="redDotPicture" class="hiddenElement" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/red_dot.png"> 
 		<header>
 			<h1>Swiss Town Locator</h1>
 		</header>
 		<div class="cf strip" >
 			<div class="center-col">
 				<div class="banner bannerBorder" id="townDisplay"></div>
-				<div class="banner showOnClick" id="coordinateDisplay">N:<span class="inputNumber" id="displayCoordinateN"></span>&#176, E <span class="inputNumber" id="displayCoordinateE"></span>&#176</div>
+				<div class="banner">
+					<span class="hiddenElement" id="coordinateDisplay">N: <span class="inputNumber" id="displayCoordinateN"></span>&#176, E: <span class="inputNumber" id="displayCoordinateE"></span>&#176</span>
+				</div>
 				<img class="centerimage" id="mapPicture" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/swiss_cantons.svg" alt="Map of Switzerland with Cantons"> 
-				<div class="btn showOnClick">Confirm choice</div>
-				<div class="btn">Next town</div>
-				<div class="btn">Distance: <span id="distanceSpan"></span></div>
+				<div class="btn hiddenElement" id="btnConfirmChoice">Confirm choice</div>
+				<div class="btn" id="btnNextTown">Next town</div>
+				<div class="banner">Distance: <span id="distanceSpan"></span></div>
 				<div class="pallet" id="previousScores"></div>
 		</div>
 		<script id="xmlCities" type="text/xml" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/cards/cards.xml"></script>
