@@ -160,6 +160,10 @@ textarea {
   position: fixed;
 }
 
+.flushright{
+  float: right;
+}
+
 .hiddenElement{
   visibility: hidden;
 }

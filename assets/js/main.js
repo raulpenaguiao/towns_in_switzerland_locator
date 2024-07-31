@@ -75,19 +75,22 @@ function FromCoordsToLatLong(x, y) {
 
     return ans = {ECoordinates: (x - x0)*(X1 - X0)/(x1 - x0) + X0 , NCoordinates:(y - y0)*(Y1 - Y0)/(y1 - y0) + Y0};
 }
-function FromLatLongToCoords(x, y) {
+function FromLatLongToCoords(eCoord, nCoord) {
     var boundRect = HTMLmapPicture.getBoundingClientRect();
-    
+    console.log("Lat Long = ", eCoord, nCoord);
     var x0 = parseFloat(boundRect.left);
     var x1 = parseFloat(boundRect.right);
     var y0 = parseFloat(boundRect.bottom);
     var y1 = parseFloat(boundRect.top);
+    console.log("Coords map picture rectangle edges = ", x0, x1, y0, y1);
     const X0 = 5.837997;
     const X1 = 10.698235;
     const Y0 = 45.774633;
     const Y1 = 47.894986;
 
-    return ans = {x: (x - X0)*(x1 - x0)/(X1 - X0) + x0 , y:(y - Y0)*(y1 - y0)/(Y1 - Y0) + y0};
+    var ans = {x: (eCoord - X0)*(x1 - x0)/(X1 - X0) + x0 , y:(nCoord - Y0)*(y1 - y0)/(Y1 - Y0) + y0};
+    console.log("Coords are = ", ans);
+    return ans;
 }
 // #endregion
 // #region Distance function
@@ -118,7 +121,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 // #region Buttons behaviour
 function ConfirmChoiceButton(){
     //Reveal the town chosen
-    var coordsCity = FromLatLongToCoords(globalVariables.currentCity.NCoordinates, globalVariables.currentCity.ECoordinates);
+    var coordsCity = FromLatLongToCoords(globalVariables.currentCity.ECoordinates, globalVariables.currentCity.NCoordinates);
     console.log(coordsCity);
     HTMLredDotPicture.style.left = coordsCity.x - halfRedDotPicture + "px";
     HTMLredDotPicture.style.top = coordsCity.y - halfRedDotPicture + "px";
@@ -127,11 +130,14 @@ function ConfirmChoiceButton(){
     var targetBoundingRect = HTMLtargetPicture.getBoundingClientRect();
     var latLonTarget = FromCoordsToLatLong((targetBoundingRect.top + targetBoundingRect.bottom)/2, (targetBoundingRect.left + targetBoundingRect.right)/2);
     var distance = haversineDistance(globalVariables.currentCity.NCoordinates, globalVariables.currentCity.ECoordinates, latLonTarget.NCoordinates, latLonTarget.ECoordinates);
+    
+    console.log(targetBoundingRect, latLonTarget, distance)
     //Hide confirm choice button
     HTMLconfirmChoiceButton.classList.add("hiddenElement");
+    HTMLredDotPicture.classList.remove("hiddenElement");
 
     //Dock previous town in the banner
-    HTMLPreviousScores.innerHTML += NewTownBanner(globalVariables.city, distance);
+    HTMLPreviousScores.innerHTML += NewTownBanner(globalVariables.currentCity, distance);
 }
 
 function NewTownBanner(city, distance){
@@ -210,6 +216,8 @@ function GenerateRandomNumber(max){
 function GenerateAndRevealTown(){
     var numberGenerated = GenerateRandomNumber(globalVariables.Limit);
     var city = globalVariables.cityData[numberGenerated];
+    globalVariables.currentCity = city;
+    console.log("In GenerateAndRevealTown, city = ", city);
     HTMLtownDisplay.innerHTML = cityPromptStringify(city);
 }
 // #endregion
