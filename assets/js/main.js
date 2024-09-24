@@ -145,7 +145,7 @@ function ConfirmChoiceButton(){
     HTMLredDotPicture.classList.remove("hiddenElement");
 
     //Dock previous town in the banner
-    HTMLPreviousScores.innerHTML += NewTownBanner(globalVariables.currentCity, distance);
+    HTMLPreviousScores.innerHTML = NewTownBanner(globalVariables.currentCity, distance) + HTMLPreviousScores.innerHTML;
 }
 
 function NewTownBanner(city, distance){
