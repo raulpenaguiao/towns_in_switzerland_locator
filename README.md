@@ -11,3 +11,9 @@ The user is prompted with the name of a town in Switzerland, and clicks on the m
 
 
 
+
+## Todo
+
+ - Double click on next town does not select the text
+ - Change text in "Distance"
+ - Map is not shown
