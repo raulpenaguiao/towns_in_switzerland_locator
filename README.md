@@ -11,9 +11,15 @@ The user is prompted with the name of a town in Switzerland, and clicks on the m
 
 
 
+## Create cities.xml
+
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install requests
+python fetch_cities.py
+```
 
 ## Todo
-
- - Double click on next town does not select the text
- - Change text in "Distance"
- - Map is not shown
+ - Location is still iffy!

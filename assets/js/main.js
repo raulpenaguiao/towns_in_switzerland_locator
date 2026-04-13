@@ -1,4 +1,4 @@
-const URLcards = "https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/cards/cards.xml";
+const URLcards = "assets/cards/cards.xml";
 const HTMLPreviousScores = document.getElementById("previousScores");
 const HTMLmapPicture = document.getElementById("mapPicture");
 const HTMLtargetPicture = document.getElementById("targetPicture");
@@ -7,7 +7,9 @@ const HTMLdisplayCoordinatesN = document.getElementById("displayCoordinateN");
 const HTMLdisplayCoordinatesE = document.getElementById("displayCoordinateE");
 const HTMLdisplayCoordinates = document.getElementById("coordinateDisplay");
 const HTMLconfirmChoiceButton = document.getElementById("btnConfirmChoice");
-const HTMLnextTownButton = document.getElementById("btnNextTown");
+const HTMLchangeNumberOfTownsButton = document.getElementById("btnChangeNumberOfTowns");
+const HTMLconfirmNumberOfTownsButton = document.getElementById("btnConfirmNumberOfTowns");
+const HTMLinputNumberTowns = document.getElementById("inputNumberTowns");
 const HTMLtownDisplay = document.getElementById("townDisplay");
 
 const halfPicture = 15;
@@ -37,6 +39,7 @@ function ListifyHTMLCollection(HTMLCollectionInstance){
 
 
 function displayTargetAndCoordinates(event) {
+    if (globalVariables.advancing) return;
     HTMLtargetPicture.classList.remove("hiddenElement");
     HTMLconfirmChoiceButton.classList.remove("hiddenElement");
     HTMLdisplayCoordinates.classList.remove("hiddenElement");
@@ -145,11 +148,26 @@ function ConfirmChoiceButton(){
     HTMLredDotPicture.classList.remove("hiddenElement");
 
     //Dock previous town in the banner
-    HTMLPreviousScores.innerHTML = NewTownBanner(globalVariables.currentCity, distance) + HTMLPreviousScores.innerHTML;
+    var win = distance < 10;
+    HTMLPreviousScores.innerHTML = NewTownBanner(globalVariables.currentCity, distance, win) + HTMLPreviousScores.innerHTML;
+
+    //Advance to next town after a short delay so the red dot is visible
+    globalVariables.advancing = true;
+    setTimeout(function() {
+        globalVariables.advancing = false;
+        NextTownButton();
+    }, 2000);
 }
 
-function NewTownBanner(city, distance){
-    return '<div class"banner">' + cityInfoStringify(city) + " at distance " + distance.toFixed(2) + " km " + '</div>'
+function NewTownBanner(city, distance, win){
+    var distText = distance.toFixed(1) + ' km' + (win ? ' ✓' : '');
+    return '<tr class="' + (win ? 'win-row' : '') + '">' +
+        '<td>' + city.name + '</td>' +
+        '<td>' + city.population.toLocaleString() + '</td>' +
+        '<td>' + city.canton + '</td>' +
+        '<td>N ' + city.NCoordinates + '° E ' + city.ECoordinates + '°</td>' +
+        '<td class="' + (win ? 'win-cell' : '') + '">' + distText + '</td>' +
+        '</tr>';
 }
 
 function NextTownButton(){
@@ -161,57 +179,52 @@ function NextTownButton(){
     //Generate and reveal name of new town
     GenerateAndRevealTownName();
 }
+function ChangeNumberOfTownsButton(){
+    HTMLinputNumberTowns.max = globalVariables.cityData.length;
+    HTMLinputNumberTowns.value = globalVariables.Limit;
+    HTMLinputNumberTowns.classList.toggle("hiddenElement");
+    HTMLconfirmNumberOfTownsButton.classList.toggle("hiddenElement");
+}
+
+function ConfirmNumberOfTownsButton(){
+    var value = parseInt(HTMLinputNumberTowns.value);
+    globalVariables.Limit = Math.max(1, Math.min(value, globalVariables.cityData.length));
+    globalVariables.cityPool = []; // rebuild pool at new difficulty
+    HTMLPreviousScores.innerHTML = '';
+    HTMLinputNumberTowns.classList.add("hiddenElement");
+    HTMLconfirmNumberOfTownsButton.classList.add("hiddenElement");
+}
+
 HTMLconfirmChoiceButton.addEventListener("click", ConfirmChoiceButton)
-HTMLnextTownButton.addEventListener("click", NextTownButton)
+HTMLchangeNumberOfTownsButton.addEventListener("click", ChangeNumberOfTownsButton)
+HTMLconfirmNumberOfTownsButton.addEventListener("click", ConfirmNumberOfTownsButton)
 // #endregion
 // #region generate town data 
 // Function to extract city data from XML
 function extractCityData(xml) {
     const cityList = [];
-    console.log(xml);
-    const citiesDataset = xml.querySelector('dataset[name="Cities"]');
-    console.log(citiesDataset);
-    
-    if (citiesDataset) {
-        const cityTable = citiesDataset.querySelector('table[name="City"]');
-        
-        if (cityTable) {
-            const rows = cityTable.querySelectorAll('row');
-            
-            rows.forEach(row => {
-                const name = row.querySelector('Name').textContent;
-                const population = row.querySelector('Population').textContent;
-                const canton = row.querySelector('Canton').textContent;
-                const nCoordinates = row.querySelector('NCoordinates').textContent;
-                const eCoordinates = row.querySelector('ECoordinates').textContent;
-                
-                const city = {
-                    Name: name,
-                    Population: population,
-                    Canton: canton,
-                    NCoordinates: nCoordinates,
-                    ECoordinates: eCoordinates
-                };
-                
-                cityList.push(city);
-            });
-        }
-    }
+    xml.querySelectorAll('Tables > Cities > City').forEach(cityNode => {
+        cityList.push({
+            name: cityNode.querySelector('Name').textContent,
+            population: parseInt(cityNode.querySelector('Population').textContent),
+            canton: cityNode.querySelector('Canton').textContent,
+            NCoordinates: parseFloat(cityNode.querySelector('NCoordinates').textContent),
+            ECoordinates: parseFloat(cityNode.querySelector('ECoordinates').textContent),
+        });
+    });
     return cityList;
 }
 
-function getXmlData(path) {
+async function getXmlData(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return new DOMParser().parseFromString(text, 'text/xml');
 }
 
-function GenerateCityData(){
-    globalVariables.cityData = [
-        {name:"Zurich", population:402762, canton:"ZH", NCoordinates:47.38, ECoordinates:8.54},
-        {name:"Geneva", population:198979, canton:"GE", NCoordinates:46.20, ECoordinates:6.14},
-        {name:"Basel", population:171017, canton:"BS", NCoordinates:47.56, ECoordinates:7.59},
-        {name:"Bern", population:133115, canton:"BE", NCoordinates:46.95, ECoordinates:7.45},
-        {name:"Lugano", population:63932, canton:"TI", NCoordinates:46.00, ECoordinates:8.95},]
-    //globalVariables.cityData = extractCityData(getXmlData(URLcards))
-    
+async function GenerateCityData(){
+    const xml = await getXmlData(URLcards);
+    globalVariables.cityData = extractCityData(xml);
+
     //sort generated cities
     globalVariables.cityData.sort((city1, city2) => city2.population - city1.population);//sorts in descending order
 
@@ -221,21 +234,28 @@ function GenerateCityData(){
 
 //#endregion
 // #region Generate and reveal town name
-function GenerateRandomNumber(max){
-    return Math.floor(Math.random() * max);
+function buildCityPool(){
+    // Fisher-Yates shuffle of indices [0 .. Limit-1]
+    var pool = [];
+    for (var i = 0; i < globalVariables.Limit; i++) pool.push(i);
+    for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    globalVariables.cityPool = pool;
 }
 
 function GenerateAndRevealTownName(){
-    var numberGenerated = GenerateRandomNumber(globalVariables.Limit);
-    var city = globalVariables.cityData[numberGenerated];
+    if (!globalVariables.cityPool || globalVariables.cityPool.length === 0) buildCityPool();
+    var index = globalVariables.cityPool.pop();
+    var city = globalVariables.cityData[index];
     globalVariables.currentCity = city;
-    //console.log("In GenerateAndRevealTown, city = ", city);
     HTMLtownDisplay.innerHTML = cityPromptStringify(city);
 }
 // #endregion
 // #region load page
-function LoadEvents(){
-    GenerateCityData();
+async function LoadEvents(){
+    await GenerateCityData();
     globalVariables.Limit = Math.min(20, globalVariables.cityData.length);
     GenerateAndRevealTownName();
 }

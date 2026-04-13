@@ -2,8 +2,8 @@
 <html lang="en">
 	<head>
     	<meta charset="utf-8">
-    	<meta name="description" content="Web app for crossword solving">
-    	<meta name="keywords" content="crossword, words, search">
+    	<meta name="description" content="Test your knowledge of Swiss town locations">
+    	<meta name="keywords" content="switzerland, towns, geography, quiz">
 
 		<title>Swiss Town Locator</title>
 		<!-- viewport-->
@@ -11,33 +11,46 @@
 		<!-- external fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"> 
-		<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
 		<!-- external CSS styles -->
 		<link rel="stylesheet" href="assets/css/reset.css">
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body>
-		<img id="targetPicture" class="hiddenElement" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/target.png"> 
-		<img id="redDotPicture" class="hiddenElement" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/images/red_dot.png"> 
+		<img id="targetPicture" class="hiddenElement" src="assets/images/target.png">
+		<img id="redDotPicture" class="hiddenElement" src="assets/images/red_dot.png">
 		<header>
-			<h1>Swiss Town Locator</h1>
+			<h1><span>Swiss</span> Town Locator</h1>
+			<p class="tagline">Click the map — find the town</p>
 		</header>
-		<div class="cf strip" >
+		<div class="cf strip">
 			<div class="center-col">
-				<div class="banner bannerBorder" id="townDisplay"></div>
-				<div class="banner">
-					<span class="hiddenElement" id="coordinateDisplay">N: <span class="inputNumber" id="displayCoordinateN"></span>&#176, E: <span class="inputNumber" id="displayCoordinateE"></span>&#176</span>
+				<div id="townDisplay"></div>
+				<span class="hiddenElement" id="coordinateDisplay">N: <span id="displayCoordinateN"></span>&#176; &nbsp; E: <span id="displayCoordinateE"></span>&#176;</span>
+				<img class="centerimage" id="mapPicture" src="assets/images/swiss_cantons.png" alt="Map of Switzerland with Cantons">
+				<div class="controls-row">
+					<div class="btn btn-secondary" id="btnChangeNumberOfTowns">Difficulty</div>
+					<input class="hiddenElement" id="inputNumberTowns" type="number" min="1" value="20">
+					<div class="btn btn-secondary hiddenElement" id="btnConfirmNumberOfTowns">Apply</div>
+					<div class="btn hiddenElement flushright" id="btnConfirmChoice">Confirm choice</div>
 				</div>
-				<img class="centerimage" id="mapPicture" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/refs/head/main/assets/images/swiss_cantons.svg" alt="Map of Switzerland with Cantons"> 
-				<div class="btn" id="btnNextTown">Next town</div>
-				<div class="btn hiddenElement" id="btnChangeNumberOfTowns">Change number of towns</div><input class="hiddenElement" id="inputNumberTowns" type="number" value="20"></input>
-				<div class="btn hiddenElement flushright" id="btnConfirmChoice">Confirm choice</div>
-				<div class="banner">Distance: <span id="distanceSpan"></span></div>
-				<div class="pallet" id="previousScores"></div>
+				<h3>Previous attempts</h3>
+				<table class="scores-table">
+					<thead>
+						<tr>
+							<th>Town</th>
+							<th>Population</th>
+							<th>Canton</th>
+							<th>Coordinates</th>
+							<th>Distance</th>
+						</tr>
+					</thead>
+					<tbody id="previousScores"></tbody>
+				</table>
+			</div>
 		</div>
-		<script id="xmlCities" type="text/xml" src="https://raw.githubusercontent.com/raulpenaguiao/towns_in_switzerland_locator/main/assets/cards/cards.xml"></script>
 		<script type="text/javascript" src="assets/js/main.js"></script>
 	</body>
 </html>
