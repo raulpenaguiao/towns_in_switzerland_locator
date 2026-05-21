@@ -1,25 +1,21 @@
 # Swiss town locator
 
-A website that allows one to test and train their knowledge of the location of the 200 largest towns in Switzerland.
-The user is prompted with the name of a town in Switzerland, and clicks on the map.
+A website to test and train your knowledge of the location of Swiss towns.
+The user is prompted with the name of a town and clicks on the map to guess its location.
 
 ---
 
 ## Features
- - User is allowed to choose a number between 20 and 200, that selects the dificulty of the game.
+- Difficulty selector: choose how many towns to cycle through (default 20, up to all 2100)
+- Responsive table: coordinates column hidden below 1200 px, population column hidden below 700 px
 
+## City data
 
-
-
-## Create cities.xml
-
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install requests
-python fetch_cities.py
-```
+`assets/cards/cards.xml` contains all **2100 Swiss municipalities** (Gemeinden) with official population,
+WGS84 coordinates, and canton — sourced from the
+[GeoNames Switzerland dump](https://download.geonames.org/export/dump/CH.zip) (CC-BY),
+which mirrors the official BFS Gemeindeverzeichnis.
+The file is committed to the repo; no script needs to be run.
 
 ## Todo
- - Location is still iffy!
+- Location is still iffy!

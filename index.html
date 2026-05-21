@@ -19,8 +19,6 @@
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body>
-		<img id="targetPicture" class="hiddenElement" src="assets/images/target.png">
-		<img id="redDotPicture" class="hiddenElement" src="assets/images/red_dot.png">
 		<header>
 			<h1><span>Swiss</span> Town Locator</h1>
 			<p class="tagline">Click the map — find the town</p>
@@ -29,11 +27,21 @@
 			<div class="center-col">
 				<div id="townDisplay"></div>
 				<span class="hiddenElement" id="coordinateDisplay">N: <span id="displayCoordinateN"></span>&#176; &nbsp; E: <span id="displayCoordinateE"></span>&#176;</span>
-				<img class="centerimage" id="mapPicture" src="assets/images/swiss_cantons.png" alt="Map of Switzerland with Cantons">
+				<div class="map-wrapper">
+					<img class="centerimage" id="mapPicture" src="assets/images/swiss_cantons.png" alt="Map of Switzerland with Cantons">
+					<img id="targetPicture" class="hiddenElement" src="assets/images/target.png">
+					<img id="redDotPicture" class="hiddenElement" src="assets/images/red_dot.png">
+				</div>
 				<div class="controls-row">
-					<div class="btn btn-secondary" id="btnChangeNumberOfTowns">Difficulty</div>
-					<input class="hiddenElement" id="inputNumberTowns" type="number" min="1" value="20">
-					<div class="btn btn-secondary hiddenElement" id="btnConfirmNumberOfTowns">Apply</div>
+					<span class="difficulty-label">Difficulty</span>
+					<div class="stars-selector">
+						<span class="star" data-level="1">★</span>
+						<span class="star" data-level="2">★</span>
+						<span class="star" data-level="3">★</span>
+						<span class="star" data-level="4">★</span>
+						<span class="star" data-level="5">★</span>
+						<span class="star star-locked" id="starSix" data-level="6">★</span>
+					</div>
 					<div class="btn hiddenElement flushright" id="btnConfirmChoice">Confirm choice</div>
 				</div>
 				<h3>Previous attempts</h3>
@@ -41,9 +49,9 @@
 					<thead>
 						<tr>
 							<th>Town</th>
-							<th>Population</th>
+							<th class="col-population">Population</th>
 							<th>Canton</th>
-							<th>Coordinates</th>
+							<th class="col-coordinates">Coordinates</th>
 							<th>Distance</th>
 						</tr>
 					</thead>

@@ -7,9 +7,6 @@ const HTMLdisplayCoordinatesN = document.getElementById("displayCoordinateN");
 const HTMLdisplayCoordinatesE = document.getElementById("displayCoordinateE");
 const HTMLdisplayCoordinates = document.getElementById("coordinateDisplay");
 const HTMLconfirmChoiceButton = document.getElementById("btnConfirmChoice");
-const HTMLchangeNumberOfTownsButton = document.getElementById("btnChangeNumberOfTowns");
-const HTMLconfirmNumberOfTownsButton = document.getElementById("btnConfirmNumberOfTowns");
-const HTMLinputNumberTowns = document.getElementById("inputNumberTowns");
 const HTMLtownDisplay = document.getElementById("townDisplay");
 
 const halfPicture = 15;
@@ -43,8 +40,9 @@ function displayTargetAndCoordinates(event) {
     HTMLtargetPicture.classList.remove("hiddenElement");
     HTMLconfirmChoiceButton.classList.remove("hiddenElement");
     HTMLdisplayCoordinates.classList.remove("hiddenElement");
-    HTMLtargetPicture.style.left = (event.x - halfPicture) + "px";
-    HTMLtargetPicture.style.top = (event.y - halfPicture) + "px";
+    var mapRect = HTMLmapPicture.getBoundingClientRect();
+    HTMLtargetPicture.style.left = (event.x - halfPicture - mapRect.left) + "px";
+    HTMLtargetPicture.style.top = (event.y - halfPicture - mapRect.top) + "px";
     globalVariables.chosenCoordinates = FromCoordsToLatLong(event.x, event.y);
     HTMLdisplayCoordinatesN.innerHTML = globalVariables.chosenCoordinates.NCoordinates.toFixed(2); 
     HTMLdisplayCoordinatesE.innerHTML = globalVariables.chosenCoordinates.ECoordinates.toFixed(2);
@@ -134,15 +132,15 @@ function ConfirmChoiceButton(){
     //Reveal the town chosen
     var coordsCity = FromLatLongToCoords(globalVariables.currentCity.ECoordinates, globalVariables.currentCity.NCoordinates);
     //console.log(coordsCity);
-    HTMLredDotPicture.style.left = coordsCity.x - halfRedDotPicture + "px";
-    HTMLredDotPicture.style.top = coordsCity.y - halfRedDotPicture + "px";
+    var mapRect = HTMLmapPicture.getBoundingClientRect();
+    HTMLredDotPicture.style.left = (coordsCity.x - halfRedDotPicture - mapRect.left) + "px";
+    HTMLredDotPicture.style.top = (coordsCity.y - halfRedDotPicture - mapRect.top) + "px";
 
     //Compute and display the distance
     var targetBoundingRect = HTMLtargetPicture.getBoundingClientRect();
     var targetCoordinates = FromCoordsToLatLong((targetBoundingRect.left + targetBoundingRect.right)/2, (targetBoundingRect.top + targetBoundingRect.bottom)/2);
     var distance = haversineDistance(globalVariables.currentCity, targetCoordinates);
     
-    console.log(targetBoundingRect, targetCoordinates, distance)
     //Hide confirm choice button
     HTMLconfirmChoiceButton.classList.add("hiddenElement");
     HTMLredDotPicture.classList.remove("hiddenElement");
@@ -150,6 +148,19 @@ function ConfirmChoiceButton(){
     //Dock previous town in the banner
     var win = distance < 10;
     HTMLPreviousScores.innerHTML = NewTownBanner(globalVariables.currentCity, distance, win) + HTMLPreviousScores.innerHTML;
+
+    if (win) {
+        globalVariables.consecutiveWins++;
+        if (globalVariables.consecutiveWins >= 10 && !globalVariables.starSixUnlocked) {
+            globalVariables.starSixUnlocked = true;
+            var s6 = document.getElementById('starSix');
+            s6.classList.remove('star-locked');
+            s6.style.animation = 'star-unlock 0.6s ease';
+            setTimeout(function() { s6.style.animation = ''; }, 600);
+        }
+    } else {
+        globalVariables.consecutiveWins = 0;
+    }
 
     //Advance to next town after a short delay so the red dot is visible
     globalVariables.advancing = true;
@@ -163,9 +174,9 @@ function NewTownBanner(city, distance, win){
     var distText = distance.toFixed(1) + ' km' + (win ? ' ✓' : '');
     return '<tr class="' + (win ? 'win-row' : '') + '">' +
         '<td>' + city.name + '</td>' +
-        '<td>' + city.population.toLocaleString() + '</td>' +
+        '<td class="col-population">' + city.population.toLocaleString() + '</td>' +
         '<td>' + city.canton + '</td>' +
-        '<td>N ' + city.NCoordinates + '° E ' + city.ECoordinates + '°</td>' +
+        '<td class="col-coordinates">N ' + city.NCoordinates + '° E ' + city.ECoordinates + '°</td>' +
         '<td class="' + (win ? 'win-cell' : '') + '">' + distText + '</td>' +
         '</tr>';
 }
@@ -179,25 +190,25 @@ function NextTownButton(){
     //Generate and reveal name of new town
     GenerateAndRevealTownName();
 }
-function ChangeNumberOfTownsButton(){
-    HTMLinputNumberTowns.max = globalVariables.cityData.length;
-    HTMLinputNumberTowns.value = globalVariables.Limit;
-    HTMLinputNumberTowns.classList.toggle("hiddenElement");
-    HTMLconfirmNumberOfTownsButton.classList.toggle("hiddenElement");
-}
+const DIFFICULTY_LIMITS = [20, 50, 125, 330, 800];
 
-function ConfirmNumberOfTownsButton(){
-    var value = parseInt(HTMLinputNumberTowns.value);
-    globalVariables.Limit = Math.max(1, Math.min(value, globalVariables.cityData.length));
-    globalVariables.cityPool = []; // rebuild pool at new difficulty
+function setDifficulty(level) {
+    if (level === 6 && !globalVariables.starSixUnlocked) return;
+    globalVariables.difficultyLevel = level;
+    globalVariables.Limit = level <= 5
+        ? Math.min(DIFFICULTY_LIMITS[level - 1], globalVariables.cityData.length)
+        : globalVariables.cityData.length;
+    globalVariables.cityPool = [];
     HTMLPreviousScores.innerHTML = '';
-    HTMLinputNumberTowns.classList.add("hiddenElement");
-    HTMLconfirmNumberOfTownsButton.classList.add("hiddenElement");
+    document.querySelectorAll('.star').forEach(function(s) {
+        s.classList.toggle('star-active', parseInt(s.dataset.level) <= level);
+    });
 }
 
 HTMLconfirmChoiceButton.addEventListener("click", ConfirmChoiceButton)
-HTMLchangeNumberOfTownsButton.addEventListener("click", ChangeNumberOfTownsButton)
-HTMLconfirmNumberOfTownsButton.addEventListener("click", ConfirmNumberOfTownsButton)
+document.querySelectorAll('.star').forEach(function(s) {
+    s.addEventListener('click', function() { setDifficulty(parseInt(s.dataset.level)); });
+});
 // #endregion
 // #region generate town data 
 // Function to extract city data from XML
@@ -228,8 +239,6 @@ async function GenerateCityData(){
     //sort generated cities
     globalVariables.cityData.sort((city1, city2) => city2.population - city1.population);//sorts in descending order
 
-    //log data
-    globalVariables.cityData.forEach(element => {console.log(element);});
 }
 
 //#endregion
@@ -256,7 +265,9 @@ function GenerateAndRevealTownName(){
 // #region load page
 async function LoadEvents(){
     await GenerateCityData();
-    globalVariables.Limit = Math.min(20, globalVariables.cityData.length);
+    globalVariables.consecutiveWins = 0;
+    globalVariables.starSixUnlocked = false;
+    setDifficulty(1);
     GenerateAndRevealTownName();
 }
 
