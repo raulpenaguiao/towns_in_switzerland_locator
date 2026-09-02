@@ -3,7 +3,14 @@
 A website to test and train your knowledge of the location of Swiss towns.
 The user is prompted with the name of a town and clicks on the map to guess its location.
 
+**Live:** <https://townsinswitzerlandlocator.netlify.app/>
+
 ---
+
+## Deployment
+
+Hosted on [Netlify](https://www.netlify.com/), which builds and deploys automatically
+on every push to `main` (no build step — the site is served straight from the repo root).
 
 ## Features
 - Difficulty selector: choose how many towns to cycle through (default 20, up to all 2100)
